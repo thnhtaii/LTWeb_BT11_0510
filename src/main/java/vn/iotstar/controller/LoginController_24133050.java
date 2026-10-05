@@ -58,7 +58,17 @@ public class LoginController_24133050 extends HttpServlet {
             return;
         }
 
-        User_24133050 user = userService.login(username.trim(), password.trim());
+        User_24133050 user;
+        try {
+            user = userService.login(username.trim(), password.trim());
+        } catch (IllegalStateException ex) {
+            log("Database error during login", ex);
+            resp.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            req.setAttribute("error", "Không thể kết nối cơ sở dữ liệu. Vui lòng kiểm tra cấu hình SQL Server hoặc thử lại sau.");
+            req.setAttribute("username", username);
+            req.getRequestDispatcher("/views/web/login.jsp").forward(req, resp);
+            return;
+        }
 
         if (user != null) {
             HttpSession session = req.getSession(true);

@@ -98,12 +98,16 @@ Toàn bộ các **Class**, **Interface**, **DAO**, **Service**, **Controller** �
 ## 4. Hướng Dẫn Khởi Chạy Dự Án
 
 ### Cấu hình mật khẩu SQL Server
-Đặt biến môi trường `APP_DB_PASSWORD`, hoặc tạo file `db.local.properties` tại thư mục gốc theo mẫu `db.local.properties.example` và điền mật khẩu SQL Server. File cấu hình riêng này được bỏ qua bởi Git để không đưa mật khẩu lên GitHub. Khi dùng file cấu hình, chạy project với thư mục làm việc là thư mục gốc.
+Tạo file `db.local.properties` tại thư mục gốc theo mẫu `db.local.properties.example`, điền cổng TCP, tài khoản và mật khẩu SQL Server. Có thể ghi đè từng giá trị bằng các biến môi trường `APP_DB_SERVER`, `APP_DB_PORT`, `APP_DB_NAME`, `APP_DB_USER`, `APP_DB_PASSWORD`. File cấu hình riêng này được bỏ qua bởi Git. Khi dùng file cấu hình, chạy project với thư mục làm việc là thư mục gốc.
+
+Với SQL Express trên máy cá nhân và tài khoản Windows có quyền quản lý database `KT_QT`, chạy `pwsh -File tools/setup-local-db.ps1`. Script tự lấy cổng TCP, tạo tài khoản SQL riêng chỉ có quyền đọc/ghi dữ liệu trong `KT_QT`, bổ sung cấu trúc giỏ hàng/đơn hàng và ghi cấu hình riêng. Dữ liệu hiện có được giữ lại. Nếu cổng động thay đổi sau khi khởi động lại SQL Server, chạy lại script rồi khởi động lại Jetty.
+
+Database cũ có thể nâng cấp bằng `database-commerce-migration.sql`. File `database.sql` dành cho khởi tạo lại dữ liệu mẫu và có xóa các bảng cũ.
 
 ### Cách 1: Chạy bằng Maven Jetty (Nhanh nhất)
 1. Mở Terminal tại thư mục gốc của project:
    ```powershell
-   mvn jetty:run
+   mvn "-Dmaven.test.skip=true" jetty:run
    ```
 2. Mở trình duyệt truy cập:
    - Website người dùng: **`http://localhost:8085/KT_QT/home`**
@@ -121,3 +125,56 @@ Toàn bộ các **Class**, **Interface**, **DAO**, **Service**, **Controller** �
 | :--- | :--- | :--- | :--- |
 | **Quản Trị Viên (Admin)** | `admin` | `123456` | Truy cập toàn bộ khu vực Admin `/admin/home` và `/admin/users` |
 | **Người Dùng Thường (User)** | `user01` đến `user15` | `123456` | Xem video, phân trang danh mục, xem chi tiết video |
+
+## 6. Giỏ Hàng Và Đặt Mua Video (Vai Trò User)
+
+Đăng nhập bằng `user01 / 123456` tại `http://localhost:8085/KT_QT/login`. Mỗi sản phẩm là một video, liên kết giỏ hàng và đơn hàng bằng `VideoId`; giá lấy từ `Videos.Price`.
+
+1. Mở `/category/videos` hoặc trang chi tiết `/video/detail?id=VID_M01`, chọn số lượng rồi nhấn **Thêm vào giỏ**. Trang chủ cũng có nút thêm video.
+2. Mở `/cart`: sửa số lượng, nhấn nút cập nhật, xóa từng video hoặc xóa toàn bộ giỏ. Số lượng được giới hạn 1–10 cả trên giao diện và phía server; thêm lại cùng video sẽ cộng số lượng tới tối đa 10.
+3. Nhấn **Thanh toán COD**, nhập tên, số điện thoại và địa chỉ nhận hàng, xác nhận đặt hàng. Đơn mới có trạng thái `NEW`, phương thức `COD`; chi tiết đơn lưu giá và số lượng tại lúc đặt. Giỏ được xóa sau khi lưu đơn thành công.
+4. Mở `/orders` để xem đơn của tài khoản đang đăng nhập và lọc theo trạng thái. Trang `/order-history` cũng mở lịch sử đơn.
+
+### Mã trạng thái trong database
+
+| `Orders.Status` | Hiển thị |
+| :--- | :--- |
+| `NEW` | Đơn hàng mới |
+| `CONFIRMED` | Đã xác nhận |
+| `PREPARING` | Chuẩn bị hàng |
+| `SHIPPING` | Vận chuyển |
+| `DELIVERING` | Giao hàng |
+| `DELIVERED` | Đã giao |
+| `CANCELED` | Đơn hàng hủy |
+| `RETURNED` | Đơn hàng hoàn |
+
+Trong SQL Server Management Studio, chọn database `KT_QT` và chạy truy vấn để tìm mã đơn:
+
+```sql
+SELECT OrderId, Username, Status, PaymentMethod, TotalAmount
+FROM dbo.Orders
+WHERE Username = 'user01'
+ORDER BY OrderId DESC;
+```
+
+Đổi `OrderId` theo mã đơn vừa tìm, đổi mã trạng thái theo bảng trên:
+
+```sql
+UPDATE dbo.Orders
+SET Status = 'CONFIRMED'
+WHERE OrderId = 1 AND Username = 'user01';
+```
+
+Tải lại `/orders?status=CONFIRMED`: đơn sẽ xuất hiện ở bộ lọc **Đã xác nhận**, đồng thời không còn ở bộ lọc **Đơn hàng mới**. Thực hiện tương tự với các trạng thái khác.
+
+Có thể chạy `database-order-status-demo.sql` trong database `KT_QT` để thêm 8 đơn video mẫu cho `user01`, mỗi trạng thái một đơn. Script không xóa dữ liệu hiện có và chạy lại không tạo trùng các đơn mẫu.
+
+### Kiểm thử chức năng
+
+Khi Jetty đang chạy và cấu hình database đã đúng:
+
+```powershell
+pwsh -File tools/verify-user-flow.ps1
+```
+
+Bộ kiểm thử gọi trực tiếp các endpoint và đối chiếu dữ liệu SQL: đăng nhập, thêm/xóa/sửa giỏ, giới hạn số lượng, tổng tiền COD, lưu chi tiết đơn, xóa giỏ sau thanh toán và lọc đủ 8 trạng thái sau khi thay đổi database. Tài khoản và đơn được tạo riêng cho kiểm thử rồi xóa khi kết thúc; không chỉnh đơn của người dùng hiện có.

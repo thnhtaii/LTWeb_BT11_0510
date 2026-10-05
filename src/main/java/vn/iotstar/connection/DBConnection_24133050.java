@@ -10,17 +10,14 @@ import java.util.Properties;
 
 public class DBConnection_24133050 {
 
-    private final String serverName = "localhost";
-    private final String dbName = "KT_QT";
-    private final String portNumber = "64590";
-    private final String userID = "sa";
-    private final String password = loadPassword();
+    private final Properties properties = loadConfiguration();
+    private final String serverName = setting("APP_DB_SERVER", "server", "localhost");
+    private final String dbName = setting("APP_DB_NAME", "database", "KT_QT");
+    private final String portNumber = setting("APP_DB_PORT", "port", "1433");
+    private final String userID = setting("APP_DB_USER", "username", "sa");
+    private final String password = setting("APP_DB_PASSWORD", "password", "");
 
-    private static String loadPassword() {
-        String environmentPassword = System.getenv("APP_DB_PASSWORD");
-        if (environmentPassword != null) {
-            return environmentPassword;
-        }
+    private static Properties loadConfiguration() {
         Properties properties = new Properties();
         Path localConfig = Path.of("db.local.properties");
         if (Files.exists(localConfig)) {
@@ -30,21 +27,19 @@ public class DBConnection_24133050 {
                 throw new IllegalStateException("Cannot read local database configuration", ex);
             }
         }
-        return properties.getProperty("password", "");
+        return properties;
+    }
+
+    private String setting(String environmentName, String propertyName, String defaultValue) {
+        String value = System.getenv(environmentName);
+        return value != null ? value : properties.getProperty(propertyName, defaultValue);
     }
 
     public Connection getConnection() throws Exception {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName
-                + ";encrypt=true;trustServerCertificate=true;sendStringParametersAsUnicode=true;characterEncoding=UTF-8;";
-        try {
-            return DriverManager.getConnection(url, userID, password);
-        } catch (Exception ex) {
-            // Fallback sang named instance localhost\\SQLEXPRESS nếu port động thay đổi
-            String fallbackUrl = "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=" + dbName
-                    + ";encrypt=true;trustServerCertificate=true;sendStringParametersAsUnicode=true;characterEncoding=UTF-8;";
-            return DriverManager.getConnection(fallbackUrl, userID, password);
-        }
+                + ";encrypt=true;trustServerCertificate=true;sendStringParametersAsUnicode=true;loginTimeout=5;";
+        return DriverManager.getConnection(url, userID, password);
     }
 
     public static void main(String[] args) {

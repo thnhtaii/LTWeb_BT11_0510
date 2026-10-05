@@ -60,7 +60,7 @@ public class UserDaoImpl_24133050 extends DBConnection_24133050 implements IUser
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Cannot query the login database", e);
         }
         return null;
     }

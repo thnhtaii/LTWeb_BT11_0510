@@ -1,1 +1,5 @@
+server=localhost
+port=1433
+database=KT_QT
+username=sa
 password=YOUR_SQL_SERVER_PASSWORD

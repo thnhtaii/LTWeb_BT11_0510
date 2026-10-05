@@ -93,8 +93,8 @@
                                         <td class="text-center">
                                             <form action="${pageContext.request.contextPath}/cart/update" method="post" class="d-inline-flex gap-2 justify-content-center">
                                                 <input type="hidden" name="videoId" value="${item.videoId}">
-                                                <input class="form-control qty-input text-center" type="number" name="quantity" value="${item.quantity}" min="1" max="${maxQuantity}">
-                                                <button class="btn btn-sm btn-outline-primary" type="submit">
+                                                <input class="form-control qty-input text-center" type="number" name="quantity" value="${item.quantity}" min="1" max="${maxQuantity}" required aria-label="Số lượng video">
+                                                <button class="btn btn-sm btn-outline-primary" type="submit" title="Cập nhật số lượng" aria-label="Cập nhật số lượng">
                                                     <i class="fa-solid fa-rotate"></i>
                                                 </button>
                                             </form>
@@ -103,7 +103,7 @@
                                             <fmt:formatNumber value="${item.lineTotal}" type="number" groupingUsed="true"/> đ
                                         </td>
                                         <td class="text-center">
-                                            <a class="btn btn-sm btn-outline-danger" href="${pageContext.request.contextPath}/cart/remove?videoId=${item.videoId}">
+                                            <a class="btn btn-sm btn-outline-danger" href="${pageContext.request.contextPath}/cart/remove?videoId=${item.videoId}" title="Xóa video khỏi giỏ" aria-label="Xóa video khỏi giỏ">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>

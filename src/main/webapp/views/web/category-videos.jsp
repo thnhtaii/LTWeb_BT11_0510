@@ -192,7 +192,7 @@
                                 </div>
                                 <form action="${pageContext.request.contextPath}/cart/add" method="post" class="d-flex gap-2 mt-3">
                                     <input type="hidden" name="videoId" value="${v.videoId}">
-                                    <input type="hidden" name="quantity" value="1">
+                                    <input class="form-control form-control-sm text-center flex-shrink-0" style="width: 68px;" type="number" name="quantity" value="1" min="1" max="10" required aria-label="Số lượng video">
                                     <input type="hidden" name="returnUrl" value="${pageContext.request.contextPath}/category/videos?categoryId=${selectedCategoryId}&page=${currentPage}">
                                     <button class="btn btn-sm btn-success w-100 fw-semibold" type="submit">
                                         <i class="fa-solid fa-cart-plus me-1"></i> Thêm vào giỏ
