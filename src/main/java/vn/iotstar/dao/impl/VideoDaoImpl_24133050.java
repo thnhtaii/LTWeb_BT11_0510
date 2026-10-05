@@ -12,7 +12,7 @@ import vn.iotstar.entity.Video_24133050;
 
 public class VideoDaoImpl_24133050 extends DBConnection_24133050 implements IVideoDao_24133050 {
 
-    private static final String BASE_SELECT = 
+    private static final String BASE_SELECT =
         "SELECT v.VideoId, v.Title, v.Poster, v.Views, v.Description, v.Active, v.CategoryId, v.Price, " +
         "       c.Categoryname, " +
         "       (SELECT COUNT(*) FROM Favorites f WHERE f.VideoId = v.VideoId) AS LikeCount, " +
@@ -128,6 +128,36 @@ public class VideoDaoImpl_24133050 extends DBConnection_24133050 implements IVid
     }
 
     @Override
+    public List<Video_24133050> findAllForAdmin(int page, int pageSize) {
+        List<Video_24133050> videos = new ArrayList<>();
+        String sql = BASE_SELECT + "ORDER BY v.VideoId ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try (Connection con = super.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, (page - 1) * pageSize);
+            ps.setInt(2, pageSize);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    videos.add(mapVideo(rs));
+                }
+            }
+        } catch (Exception ex) {
+            throw new IllegalStateException("Cannot load admin videos", ex);
+        }
+        return videos;
+    }
+
+    @Override
+    public int countForAdmin() {
+        try (Connection con = super.getConnection();
+                PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM Videos");
+                ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception ex) {
+            throw new IllegalStateException("Cannot count admin videos", ex);
+        }
+    }
+
+    @Override
     public int countLikes(String videoId) {
         String sql = "SELECT COUNT(*) FROM Favorites WHERE VideoId = ?";
         try (Connection con = super.getConnection();
@@ -180,7 +210,7 @@ public class VideoDaoImpl_24133050 extends DBConnection_24133050 implements IVid
             ps.setBigDecimal(8, video.getPrice());
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Cannot create video", e);
         }
     }
 
@@ -200,9 +230,11 @@ public class VideoDaoImpl_24133050 extends DBConnection_24133050 implements IVid
             }
             ps.setBigDecimal(6, video.getPrice());
             ps.setString(7, video.getVideoId());
-            ps.executeUpdate();
+            if (ps.executeUpdate() != 1) {
+                throw new IllegalStateException("Video no longer exists");
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Cannot update video", e);
         }
     }
 

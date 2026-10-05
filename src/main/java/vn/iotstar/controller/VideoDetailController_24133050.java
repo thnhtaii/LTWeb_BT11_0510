@@ -26,16 +26,16 @@ public class VideoDetailController_24133050 extends HttpServlet {
             return;
         }
 
-        // Tăng lượt xem (views) khi người dùng mở trang chi tiết video
-        videoService.increaseViews(videoId.trim());
-
         // Lấy chi tiết video kèm tên category, số like (Favorites) và số share (Shares)
         Video_24133050 video = videoService.findById(videoId.trim());
 
-        if (video == null) {
-            resp.sendRedirect(req.getContextPath() + "/category/videos");
+        if (video == null || !video.isActive()) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
+
+        videoService.increaseViews(videoId.trim());
+        video.setViews(video.getViews() + 1);
 
         req.setAttribute("video", video);
         req.getRequestDispatcher("/views/web/video-detail.jsp").forward(req, resp);

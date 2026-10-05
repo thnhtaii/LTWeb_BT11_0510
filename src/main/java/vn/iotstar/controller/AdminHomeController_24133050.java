@@ -42,7 +42,7 @@ public class AdminHomeController_24133050 extends HttpServlet {
         // Tải số liệu thống kê cho trang Dashboard Admin
         int totalUsers = userService.countAll();
         int totalCategories = categoryService.findAll().size();
-        int totalVideos = videoService.countAll();
+        int totalVideos = videoService.countForAdmin();
 
         req.setAttribute("totalUsers", totalUsers);
         req.setAttribute("totalCategories", totalCategories);

@@ -87,9 +87,9 @@
                         <c:forEach var="item" items="${order.items}">
                             <div class="d-flex align-items-center justify-content-between py-2">
                                 <div class="d-flex align-items-center gap-3">
-                                    <img class="order-thumb" src="${pageContext.request.contextPath}/image?fname=${item.poster}" alt="${item.title}">
+                                    <img class="order-thumb" src="${pageContext.request.contextPath}/image?fname=${item.poster}" alt="<c:out value='${item.title}'/>">
                                     <div>
-                                        <div class="fw-semibold">${item.title}</div>
+                                        <div class="fw-semibold"><c:out value="${item.title}"/></div>
                                         <div class="small text-muted">${item.videoId} x ${item.quantity}</div>
                                     </div>
                                 </div>

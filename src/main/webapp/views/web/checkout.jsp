@@ -60,7 +60,7 @@
                 <c:forEach var="item" items="${cartItems}">
                     <div class="d-flex justify-content-between align-items-start border-bottom py-3">
                         <div>
-                            <div class="fw-semibold">${item.title}</div>
+                            <div class="fw-semibold"><c:out value="${item.title}"/></div>
                             <div class="small text-muted">${item.videoId} x ${item.quantity}</div>
                         </div>
                         <div class="fw-bold text-primary text-end">

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${video.title} - Chi Tiết Video</title>
+    <title><c:out value="${video.title}"/> - Chi Tiết Video</title>
     <style>
         .video-detail-box {
             background-color: #ffffff;
@@ -65,7 +65,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home" class="text-decoration-none">Trang Chủ</a></li>
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/category/videos?categoryId=${video.categoryId}" class="text-decoration-none">${video.categoryName}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">${video.title}</li>
+            <li class="breadcrumb-item active" aria-current="page"><c:out value="${video.title}"/></li>
         </ol>
     </nav>
 
@@ -93,7 +93,7 @@
                     <div class="col-md-5 col-lg-4 text-center">
                         <div class="poster-container mx-auto">
                             <img src="${pageContext.request.contextPath}/image?fname=${video.poster}" 
-                                 alt="${video.title}">
+                                 alt="<c:out value='${video.title}'/>">
                         </div>
                     </div>
 
@@ -102,7 +102,7 @@
                         <div class="d-flex flex-column gap-2">
                             <div>
                                 <span class="info-label">Tiêu đề:</span>
-                                <span class="info-value fw-bold text-primary fs-5">${video.title}</span>
+                                <span class="info-value fw-bold text-primary fs-5"><c:out value="${video.title}"/></span>
                             </div>
 
                             <div>
@@ -163,7 +163,7 @@
                 <!-- description (Phần mô tả ở bên dưới theo đúng mẫu đề thi) -->
                 <div class="desc-box">
                     <div class="fw-bold text-dark mb-1">Mô tả video:</div>
-                    <div class="text-secondary">${video.description}</div>
+                    <div class="text-secondary"><c:out value="${video.description}"/></div>
                 </div>
             </div>
         </div>

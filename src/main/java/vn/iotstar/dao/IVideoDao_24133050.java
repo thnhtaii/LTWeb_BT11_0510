@@ -18,6 +18,10 @@ public interface IVideoDao_24133050 {
 
     int countAll();
 
+    List<Video_24133050> findAllForAdmin(int page, int pageSize);
+
+    int countForAdmin();
+
     int countLikes(String videoId);
 
     int countShares(String videoId);

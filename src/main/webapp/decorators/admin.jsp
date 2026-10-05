@@ -85,6 +85,13 @@
             color: #64748b;
             font-size: 0.875rem;
         }
+        @media (max-width: 767px) {
+            .admin-wrapper { flex-direction: column; }
+            .admin-sidebar { width: 100%; }
+            .admin-sidebar > .mt-auto { display: none; }
+            .admin-navbar { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
+            .admin-content { padding: 16px; }
+        }
     </style>
     <sitemesh:write property='head'/>
 </head>
@@ -108,6 +115,9 @@
                     </a>
                     <a class="nav-link rounded" href="${pageContext.request.contextPath}/category/videos">
                         <i class="fa-solid fa-video"></i> Video theo Danh Mục
+                    </a>
+                    <a class="nav-link rounded" href="${pageContext.request.contextPath}/admin/videos">
+                        <i class="fa-solid fa-film"></i> Quản lý video
                     </a>
                 </nav>
 

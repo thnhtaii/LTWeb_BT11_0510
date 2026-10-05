@@ -83,7 +83,7 @@
                 <div class="col-md-4">
                     <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
                         <div class="position-relative">
-                            <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" class="card-img-top" alt="${v.title}" style="height: 190px; object-fit: cover;">
+                            <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" class="card-img-top" alt="<c:out value='${v.title}'/>" style="height: 190px; object-fit: cover;">
                             <span class="position-absolute top-0 end-0 bg-dark bg-opacity-75 text-white badge m-2">
                                 <i class="fa-solid fa-eye me-1"></i> ${v.views} views
                             </span>
@@ -91,9 +91,9 @@
                         <div class="card-body d-flex flex-direction-column justify-content-between">
                             <div>
                                 <div class="badge bg-primary-subtle text-primary mb-2">${v.categoryName}</div>
-                                <h6 class="card-title fw-bold text-truncate" title="${v.title}">${v.title}</h6>
+                                <h6 class="card-title fw-bold text-truncate" title="<c:out value='${v.title}'/>"><c:out value="${v.title}"/></h6>
                                 <p class="card-text text-muted small text-truncate-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                    ${v.description}
+                                    <c:out value="${v.description}"/>
                                 </p>
                                 <div class="fw-bold text-danger">
                                     <fmt:formatNumber value="${v.price}" type="number" groupingUsed="true"/> đ

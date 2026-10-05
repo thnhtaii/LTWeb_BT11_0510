@@ -178,3 +178,13 @@ pwsh -File tools/verify-user-flow.ps1
 ```
 
 Bộ kiểm thử gọi trực tiếp các endpoint và đối chiếu dữ liệu SQL: đăng nhập, thêm/xóa/sửa giỏ, giới hạn số lượng, tổng tiền COD, lưu chi tiết đơn, xóa giỏ sau thanh toán và lọc đủ 8 trạng thái sau khi thay đổi database. Tài khoản và đơn được tạo riêng cho kiểm thử rồi xóa khi kết thúc; không chỉnh đơn của người dùng hiện có.
+
+## 7. Thêm Và Sửa Video (Admin)
+
+Đăng nhập `admin / 123456`, mở menu **Quản lý video** tại `/admin/videos`. Danh sách có phân trang và hiển thị cả video đang hoạt động lẫn video đã ẩn.
+
+- **Thêm video:** nhấn **Thêm video**, nhập mã duy nhất, tiêu đề, danh mục, giá bán, mô tả và chọn trạng thái hiển thị. Có thể tải poster JPG/PNG/GIF (tối đa 5 MB, 16 triệu điểm ảnh) hoặc chọn tên file trong `uploads`.
+- **Sửa video:** nhấn biểu tượng bút, chỉnh thông tin và lưu. Mã video được giữ nguyên; lượt xem, lượt thích/chia sẻ và các đơn hàng cũ không bị thay đổi. Nếu không chọn poster mới, ảnh cũ được giữ lại.
+- **Hiển thị:** video đang hoạt động xuất hiện ở danh mục và trang chi tiết phía User; tắt công tắc sẽ ẩn video khỏi các trang này. Giá đã lưu trong các đơn hàng cũ được giữ nguyên khi sửa giá video.
+
+Các chức năng này chỉ cho phép Admin truy cập. Khi dữ liệu không hợp lệ hoặc không lưu được, form hiển thị lỗi thay vì báo thành công.

@@ -78,10 +78,10 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex gap-3 align-items-center">
-                                                <img class="cart-thumb" src="${pageContext.request.contextPath}/image?fname=${item.poster}" alt="${item.title}">
+                                                <img class="cart-thumb" src="${pageContext.request.contextPath}/image?fname=${item.poster}" alt="<c:out value='${item.title}'/>">
                                                 <div>
                                                     <a class="fw-bold text-decoration-none" href="${pageContext.request.contextPath}/video/detail?id=${item.videoId}">
-                                                        ${item.title}
+                                                        <c:out value="${item.title}"/>
                                                     </a>
                                                     <div class="small text-muted">Mã video: ${item.videoId}</div>
                                                 </div>

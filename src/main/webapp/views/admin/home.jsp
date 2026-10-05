@@ -71,8 +71,8 @@
                     </div>
                 </div>
                 <div class="mt-2 pt-2 border-top">
-                    <a href="${pageContext.request.contextPath}/category/videos" class="small text-decoration-none fw-semibold text-danger">
-                        Xem danh sách video <i class="fa-solid fa-arrow-right ms-1"></i>
+                    <a href="${pageContext.request.contextPath}/admin/videos" class="small text-decoration-none fw-semibold text-danger">
+                        Quản lý video <i class="fa-solid fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>

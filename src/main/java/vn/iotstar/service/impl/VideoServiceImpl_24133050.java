@@ -42,6 +42,16 @@ public class VideoServiceImpl_24133050 implements IVideoService_24133050 {
     }
 
     @Override
+    public List<Video_24133050> findAllForAdmin(int page, int pageSize) {
+        return videoDao.findAllForAdmin(page, pageSize);
+    }
+
+    @Override
+    public int countForAdmin() {
+        return videoDao.countForAdmin();
+    }
+
+    @Override
     public int countLikes(String videoId) {
         return videoDao.countLikes(videoId);
     }

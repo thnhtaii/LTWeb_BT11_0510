@@ -139,7 +139,7 @@
                             <!-- [poster] -->
                             <div class="poster-wrap">
                                 <a href="${pageContext.request.contextPath}/video/detail?id=${v.videoId}" class="w-100 h-100">
-                                    <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" alt="${v.title}">
+                                    <img src="${pageContext.request.contextPath}/image?fname=${v.poster}" alt="<c:out value='${v.title}'/>">
                                 </a>
                             </div>
 
@@ -150,8 +150,8 @@
                                     <div class="video-info-row">
                                         <span class="video-label">Tiêu đề:</span>
                                         <a href="${pageContext.request.contextPath}/video/detail?id=${v.videoId}" 
-                                           class="fw-bold text-primary text-decoration-none" title="${v.title}">
-                                            ${v.title}
+                                           class="fw-bold text-primary text-decoration-none" title="<c:out value='${v.title}'/>">
+                                            <c:out value="${v.title}"/>
                                         </a>
                                     </div>
 
