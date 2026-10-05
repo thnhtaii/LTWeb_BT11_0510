@@ -1,0 +1,7 @@
+/target/
+/.idea/
+/.vscode/
+*.log
+/.env
+/.env.*
+/db.local.properties
